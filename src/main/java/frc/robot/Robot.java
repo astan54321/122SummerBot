@@ -40,11 +40,8 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void testInit() {
-  }
-
-  @Override
-  public void testPeriodic() {
+  public void disabledInit() {
+    alphaChi.setCoast();
   }
 
   private void initDriveSubsystem() {

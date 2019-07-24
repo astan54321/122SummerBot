@@ -36,8 +36,13 @@ public class WestCoastSS extends Subsystem {
     DRIVE_MODE = mode;
   }
 
+  public void setCoast() {
+    leftMaster.setNeutralMode(NeutralMode.Coast);
+    rightMaster.setNeutralMode(NeutralMode.Coast);
+  }
+
   public void drive(double speedInput, double rotationInput) {
-    double speed = speedInput * SPEED_MAX;
+    double speed = speedInput * SPEED_MAX * -1;
     double rotation = rotationInput * ROTATION_MAX;
     switch (DRIVE_MODE) {
     case kArcade:
