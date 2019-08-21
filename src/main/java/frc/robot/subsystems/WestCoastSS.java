@@ -12,13 +12,13 @@ import frc.robot.maps.RobotMap;
 
 public class WestCoastSS extends Subsystem {
 
-  WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave;
-  DifferentialDrive drive;
-  AHRS navx;
-  Encoder leftEnc, rightEnc;
-  double SPEED_MAX, ROTATION_MAX;
-  final double DISTANCE_PER_ENCODER_TICK = 0 * Math.PI; // update this before using duh
-  DriveMode DRIVE_MODE;
+  private WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave;
+  private DifferentialDrive drive;
+  private AHRS navx;
+  private Encoder leftEnc, rightEnc;
+  private double SPEED_MAX, ROTATION_MAX;
+  private final double DISTANCE_PER_ENCODER_TICK = 0 * Math.PI; // update this before using duh
+  private DriveMode DRIVE_MODE;
 
   // defaults to curveDrive
   public WestCoastSS() {

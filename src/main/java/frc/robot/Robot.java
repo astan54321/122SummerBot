@@ -2,15 +2,21 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Hatch;
 import frc.robot.subsystems.WestCoastSS;
 import frc.robot.subsystems.WestCoastSS.DriveMode;
 
 public class Robot extends TimedRobot {
 
-  DriverStation ds;
-  WestCoastSS alphaChi;
+  private DriverStation ds;
+  private WestCoastSS alphaChi;
+  private Arm arm;
+  private Hatch hatch;
   private final ControlMode CONTROL_MODE = ControlMode.kGTA;
 
+  // publics
+  // in-match control
   @Override
   public void robotInit() {
     initDS();
@@ -44,12 +50,19 @@ public class Robot extends TimedRobot {
     alphaChi.setCoast();
   }
 
+  // privates
+  // init subsystems
   private void initDriveSubsystem() {
     alphaChi = new WestCoastSS();
     alphaChi.setMode(DriveMode.kCurve);
     alphaChi.setMaxSpeeds(Constants.SPEED_MAX, Constants.ROTATION_MAX);
   }
 
+  private void initDS() {
+    ds = new DriverStation();
+  }
+
+  // control methods for individual subsystems
   private void driveControl() {
     switch (CONTROL_MODE) {
     case kGTA:
@@ -64,10 +77,7 @@ public class Robot extends TimedRobot {
     }
   }
 
-  private void initDS() {
-    ds = new DriverStation();
-  }
-
+  // misc.
   private enum ControlMode {
     kGTA, kSticks, kDumb; // kDumb AKA kTank
   };
