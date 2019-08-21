@@ -58,6 +58,14 @@ public class Robot extends TimedRobot {
     alphaChi.setMaxSpeeds(Constants.SPEED_MAX, Constants.ROTATION_MAX);
   }
 
+  private void initCargoSubsystem() {
+    arm = new Arm();
+  }
+
+  private void initHatchSubsystem() {
+    hatch = new Hatch();
+  }
+
   private void initDS() {
     ds = new DriverStation();
   }
@@ -74,6 +82,55 @@ public class Robot extends TimedRobot {
     case kDumb:
       alphaChi.setLeftRight(ds.getThrottle(), ds.getRightThrottle());
       break;
+    }
+  }
+
+  /*
+   * ONLY functional if NOT HAS_HATCH ||| hold INTAKE button: move arm to DOWN and
+   * INTAKE (arm returns to UP position when HAS_CARGO) ||| hold EJECT button:
+   * move arm to UP and EJECT
+   */
+
+  private void cargoControlMatch() {
+    if (!hatch.hasHatch()) {
+
+      if (arm.hasCargo()) {
+        // UP position
+        arm.eject(ds.getCargoEject());
+      } else if (ds.getCargoIntake()) {
+        // DOWN position
+        arm.intake();
+      } else {
+        arm.stopIntake();
+        if (ds.getCargoEject()) {
+          // UP position
+        }
+      }
+
+    }
+    // T E M P O R A R Y until POT attached to arm and positional control added
+    arm.moveArmManual(ds.getManualArmMove());
+  }
+
+  /**
+   * ONLY functional if NOT HAS_CARGO ||| hold INTAKE button: DEPLOY and INTAKE
+   * ||| hold EJECT button: EJECT (RETRACT when EJECT button released)
+   */
+  private void hatchControlMatch() {
+    if (!arm.hasCargo()) {
+
+      if (hatch.hasHatch()) {
+        hatch.deploy();
+        hatch.eject(ds.getHatchEject());
+      } else if (ds.getHatchIntake()) {
+        hatch.deploy();
+        hatch.intake();
+      } else {
+        hatch.stopIntake();
+        if (ds.getHatchRetract())
+          hatch.retract();
+      }
+
     }
   }
 

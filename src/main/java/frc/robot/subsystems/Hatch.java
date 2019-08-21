@@ -23,7 +23,6 @@ public class Hatch extends Subsystem {
   }
 
   public void intakeManual(double speed) {
-    deploy();
     intakeMaster.set(speed);
   }
 
@@ -33,9 +32,26 @@ public class Hatch extends Subsystem {
     intakeManual(intakeSpeed);
   }
 
+  public void intake() {
+    intake(true);
+  }
+
   public void eject(boolean eject) {
     double ejectSpeed = eject ? Constants.HATCH_EJECT_SPEED : Constants.HATCH_STALL_SPEED;
     intakeManual(ejectSpeed);
+  }
+
+  public void eject() {
+    eject(true);
+  }
+
+  public void stall() {
+    intake(false);
+    eject(false);
+  }
+
+  public void stopIntake() {
+    intakeManual(0);
   }
 
   public void deploy() {
@@ -48,6 +64,10 @@ public class Hatch extends Subsystem {
 
   private boolean getDeployed() {
     return deployer.get() == Constants.DEPLOY;
+  }
+
+  public boolean hasHatch() {
+    return hatchCollected.get();
   }
 
   private void initMotors() {

@@ -50,6 +50,23 @@ public class Arm extends Subsystem {
     rollerManual(ejectSpeed);
   }
 
+  public void intake() {
+    intake(true);
+  }
+
+  public void eject() {
+    eject(true);
+  }
+
+  public void stall() {
+    intake(false);
+    eject(false);
+  }
+
+  public void stopIntake() {
+    rollerManual(0);
+  }
+
   public boolean hasCargo() {
     return cargoCollected.get();
   }

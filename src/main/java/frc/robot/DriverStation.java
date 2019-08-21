@@ -33,6 +33,34 @@ public class DriverStation {
 
     // Operator methods
 
+    public double getManualArmMove() {
+        return operator.getRawAxis(Controls.MANUAL_ARM_AXIS);
+    }
+
+    public boolean getCargoIntake() {
+        return operator.getRawButton(Controls.CARGO_INTAKE);
+    }
+
+    public boolean getCargoEject() {
+        return operator.getRawButton(Controls.CARGO_EJECT);
+    }
+
+    public boolean getArmUpOverride() {
+        return operator.getRawButton(button)
+    }
+
+    public boolean getHatchIntake() {
+        return operator.getRawButton(Controls.HATCH_INTAKE);
+    }
+
+    public boolean getHatchEject() {
+        return operator.getRawButton(Controls.HATCH_EJECT);
+    }
+
+    public boolean getHatchRetract() {
+        return operator.getRawButtonReleased(Controls.HATCH_EJECT);
+    }
+
     // Misc. utils
 
 }
