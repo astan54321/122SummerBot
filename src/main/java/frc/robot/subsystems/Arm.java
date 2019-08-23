@@ -32,8 +32,12 @@ public class Arm extends Subsystem {
     armMaster.set(speed);
   }
 
-  public void rollerManual(double intakeSpeed) {
+  public void topRollerManual(double intakeSpeed) {
     topRoller.set(intakeSpeed);
+  }
+
+  public void bottomRollerManual(double intakeSpeed) {
+    bottomRoller.set(intakeSpeed);
   }
 
   /*
@@ -42,12 +46,12 @@ public class Arm extends Subsystem {
    */
   public void intake(boolean intake) {
     double intakeSpeed = intake ? Constants.CARGO_INTAKE_SPEED : Constants.CARGO_STALL_SPEED;
-    rollerManual(intakeSpeed);
+    topRollerManual(intakeSpeed);
   }
 
   public void eject(boolean eject) {
     double ejectSpeed = eject ? Constants.CARGO_EJECT_SPEED : Constants.CARGO_STALL_SPEED;
-    rollerManual(ejectSpeed);
+    topRollerManual(ejectSpeed);
   }
 
   public void intake() {
@@ -64,7 +68,7 @@ public class Arm extends Subsystem {
   }
 
   public void stopIntake() {
-    rollerManual(0);
+    topRollerManual(0);
   }
 
   public boolean hasCargo() {

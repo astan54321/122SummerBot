@@ -45,10 +45,6 @@ public class DriverStation {
         return operator.getRawButton(Controls.CARGO_EJECT);
     }
 
-    public boolean getArmUpOverride() {
-        return operator.getRawButton(button)
-    }
-
     public boolean getHatchIntake() {
         return operator.getRawButton(Controls.HATCH_INTAKE);
     }
@@ -57,8 +53,30 @@ public class DriverStation {
         return operator.getRawButton(Controls.HATCH_EJECT);
     }
 
+    public boolean getHatchDeploy() {
+        return operator.getRawButton(4);
+    }
+
     public boolean getHatchRetract() {
-        return operator.getRawButtonReleased(Controls.HATCH_EJECT);
+        return operator.getRawButton(3);
+    }
+
+    // -----------------------------------
+
+    public boolean getTopRolerIn() {
+        return operator.getRawButton(5);
+    }
+
+    public boolean getTopRolerOut() {
+        return operator.getRawButton(6);
+    }
+
+    public boolean getBottomRolerIn() {
+        return operator.getRawAxis(2) > 0.05;
+    }
+
+    public boolean getBottomRolerOut() {
+        return operator.getRawAxis(3) > 0.05;
     }
 
     // Misc. utils

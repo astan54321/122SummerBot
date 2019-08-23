@@ -21,11 +21,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     initDS();
     initDriveSubsystem();
+    initCargoSubsystem();
+    initHatchSubsystem();
   }
 
   @Override
   public void robotPeriodic() {
-    System.out.println(alphaChi.getAngle());
   }
 
   @Override
@@ -43,6 +44,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveControl();
+    cargoControlTest();
+    hatchControlTest();
   }
 
   @Override
@@ -85,6 +88,27 @@ public class Robot extends TimedRobot {
     }
   }
 
+  private void cargoControlTest() {
+    arm.moveArmManual(ds.getManualArmMove() * 0.6 - .035);
+
+    double speed = 1;
+    if (ds.getTopRolerIn()) {
+      arm.topRollerManual(speed);
+    } else if (ds.getTopRolerOut()) {
+      arm.topRollerManual(-speed);
+    } else {
+      arm.topRollerManual(0);
+    }
+
+    if (ds.getBottomRolerIn()) {
+      arm.bottomRollerManual(speed);
+    } else if (ds.getBottomRolerOut()) {
+      arm.bottomRollerManual(-speed);
+    } else {
+      arm.bottomRollerManual(0);
+    }
+  }
+
   /*
    * ONLY functional if NOT HAS_HATCH ||| hold INTAKE button: move arm to DOWN and
    * INTAKE (arm returns to UP position when HAS_CARGO) ||| hold EJECT button:
@@ -110,6 +134,24 @@ public class Robot extends TimedRobot {
     }
     // T E M P O R A R Y until POT attached to arm and positional control added
     arm.moveArmManual(ds.getManualArmMove());
+  }
+
+  private void hatchControlTest() {
+    double speed = 0.7;
+    if (ds.getHatchIntake()) {
+      hatch.intakeManual(speed);
+    } else if (ds.getHatchEject()) {
+      hatch.intakeManual(-speed);
+    } else {
+      hatch.intakeManual(0);
+    }
+
+    if (ds.getHatchDeploy()) {
+      hatch.deploy();
+    } else if (ds.getHatchRetract()) {
+      hatch.retract();
+    }
+
   }
 
   /**

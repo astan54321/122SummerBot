@@ -12,7 +12,7 @@ import frc.robot.maps.RobotMap;
 
 public class Hatch extends Subsystem {
 
-  private WPI_VictorSPX intakeMaster, intakeSlave;
+  private WPI_VictorSPX intake;
   private DoubleSolenoid deployer;
   private DigitalInput hatchCollected;
 
@@ -23,7 +23,7 @@ public class Hatch extends Subsystem {
   }
 
   public void intakeManual(double speed) {
-    intakeMaster.set(speed);
+    intake.set(speed);
   }
 
   public void intake(boolean intake) {
@@ -71,17 +71,11 @@ public class Hatch extends Subsystem {
   }
 
   private void initMotors() {
-    intakeMaster = new WPI_VictorSPX(RobotMap.INTAKE_MASTER);
-    intakeSlave = new WPI_VictorSPX(RobotMap.INTAKE_SLAVE);
+    intake = new WPI_VictorSPX(RobotMap.HATCH_INTAKE);
 
     resetMotors();
 
-    intakeSlave.setInverted(Constants.HATCH_INTAKE_INVERTED);
-    intakeMaster.setInverted(!(intakeSlave.getInverted()));
-
-    intakeSlave.follow(intakeMaster);
-
-    intakeMaster.setNeutralMode(NeutralMode.Brake);
+    intake.setNeutralMode(NeutralMode.Brake);
   }
 
   public void initPneumatics() {
@@ -93,8 +87,7 @@ public class Hatch extends Subsystem {
   }
 
   private void resetMotors() {
-    intakeMaster.configFactoryDefault();
-    intakeSlave.configFactoryDefault();
+    intake.configFactoryDefault();
   }
 
   @Override

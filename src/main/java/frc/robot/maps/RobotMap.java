@@ -22,12 +22,11 @@ public class RobotMap {
     public static final int ARM_POSITION_POT = 0;
 
     // Hatch mech
-    public static final int INTAKE_MASTER = 21;
-    public static final int INTAKE_SLAVE = 22;
+    public static final int HATCH_INTAKE = 21;
     public static final int HATCH_COLLECTED_SWITCH = 1;
 
     // Pneumatics
-    public static final int PCM_CHANNEL = 30;
+    public static final int PCM_CHANNEL = 40;
     public static final int HATCH_CHANNEL_A = 0;
     public static final int HATCH_CHANNEL_B = 1;
     public static final int CLIMB_CHANNEL_A = 2;

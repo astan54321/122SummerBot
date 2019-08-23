@@ -20,6 +20,6 @@ public class Constants {
     public static final double HATCH_EJECT_SPEED = 0;
     public static final double HATCH_STALL_SPEED = 0;
     public static final boolean HATCH_INTAKE_INVERTED = false;
-    public static final Value RETRACT = Value.kForward;
-    public static final Value DEPLOY = Value.kReverse;
+    public static final Value RETRACT = Value.kReverse;
+    public static final Value DEPLOY = Value.kForward;
 }
