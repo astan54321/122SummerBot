@@ -24,6 +24,7 @@ public class Arm extends Subsystem {
     // initSensors();
   }
 
+  // ________________________________________________________________
   /*
    * UP is _____ (-/+) DOWN is ____ (-/+)
    */
@@ -32,13 +33,19 @@ public class Arm extends Subsystem {
     armMaster.set(speed);
   }
 
+  // ________________________________________________________________
+
   public void topRollerManual(double intakeSpeed) {
     topRoller.set(intakeSpeed);
   }
 
+  // ________________________________________________________________
+
   public void bottomRollerManual(double intakeSpeed) {
     bottomRoller.set(intakeSpeed);
   }
+
+  // ________________________________________________________________
 
   /*
    * Intakes if a button is pressed, AND with hasCargo() once limit switch
@@ -49,31 +56,45 @@ public class Arm extends Subsystem {
     topRollerManual(intakeSpeed);
   }
 
+  // ________________________________________________________________
+
   public void eject(boolean eject) {
     double ejectSpeed = eject ? Constants.CARGO_EJECT_SPEED : Constants.CARGO_STALL_SPEED;
     topRollerManual(ejectSpeed);
   }
 
+  // ________________________________________________________________
+
   public void intake() {
     intake(true);
   }
 
+  // ________________________________________________________________
+
   public void eject() {
     eject(true);
   }
+
+  // ________________________________________________________________
 
   public void stall() {
     intake(false);
     eject(false);
   }
 
+  // ________________________________________________________________
+
   public void stopIntake() {
     topRollerManual(0);
   }
 
+  // ________________________________________________________________
+
   public boolean hasCargo() {
     return cargoCollected.get();
   }
+
+  // ________________________________________________________________
 
   private void resetMotors() {
     topRoller.configFactoryDefault();
@@ -81,6 +102,8 @@ public class Arm extends Subsystem {
     armMaster.configFactoryDefault();
     armSlave.configFactoryDefault();
   }
+
+  // ________________________________________________________________
 
   private void initMotors() {
     topRoller = new WPI_VictorSPX(RobotMap.TOP_ROLLER_MOTOR);
@@ -104,10 +127,14 @@ public class Arm extends Subsystem {
 
   }
 
+  // ________________________________________________________________
+
   private void initSensors() {
     cargoCollected = new DigitalInput(RobotMap.CARGO_COLLECTED_SWITCH);
     armPosition = new AnalogInput(RobotMap.ARM_POSITION_POT);
   }
+
+  // ________________________________________________________________
 
   @Override
   public void initDefaultCommand() {

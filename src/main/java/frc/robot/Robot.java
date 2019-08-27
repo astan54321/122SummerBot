@@ -24,22 +24,27 @@ public class Robot extends TimedRobot {
     initCargoSubsystem();
     initHatchSubsystem();
   }
+  // ________________________________________________________________
 
   @Override
   public void robotPeriodic() {
   }
+  // ________________________________________________________________
 
   @Override
   public void autonomousInit() {
   }
+  // ________________________________________________________________
 
   @Override
   public void autonomousPeriodic() {
   }
+  // ________________________________________________________________
 
   @Override
   public void teleopInit() {
   }
+  // ________________________________________________________________
 
   @Override
   public void teleopPeriodic() {
@@ -47,11 +52,13 @@ public class Robot extends TimedRobot {
     cargoControlTest();
     hatchControlTest();
   }
+  // ________________________________________________________________
 
   @Override
   public void disabledInit() {
     alphaChi.setCoast();
   }
+  // ________________________________________________________________
 
   // privates
   // init subsystems
@@ -60,18 +67,22 @@ public class Robot extends TimedRobot {
     alphaChi.setMode(DriveMode.kCurve);
     alphaChi.setMaxSpeeds(Constants.SPEED_MAX, Constants.ROTATION_MAX);
   }
+  // ________________________________________________________________
 
   private void initCargoSubsystem() {
     arm = new Arm();
   }
+  // ________________________________________________________________
 
   private void initHatchSubsystem() {
     hatch = new Hatch();
   }
+  // ________________________________________________________________
 
   private void initDS() {
     ds = new DriverStation();
   }
+  // ________________________________________________________________
 
   // control methods for individual subsystems
   private void driveControl() {
@@ -87,6 +98,7 @@ public class Robot extends TimedRobot {
       break;
     }
   }
+  // ________________________________________________________________
 
   private void cargoControlTest() {
     arm.moveArmManual(ds.getManualArmMove() * 0.6 - .035);
@@ -108,6 +120,7 @@ public class Robot extends TimedRobot {
       arm.bottomRollerManual(0);
     }
   }
+  // ________________________________________________________________
 
   /*
    * ONLY functional if NOT HAS_HATCH ||| hold INTAKE button: move arm to DOWN and
@@ -135,6 +148,7 @@ public class Robot extends TimedRobot {
     // T E M P O R A R Y until POT attached to arm and positional control added
     arm.moveArmManual(ds.getManualArmMove());
   }
+  // ________________________________________________________________
 
   private void hatchControlTest() {
     double speed = 0.7;
@@ -153,6 +167,7 @@ public class Robot extends TimedRobot {
     }
 
   }
+  // ________________________________________________________________
 
   /**
    * ONLY functional if NOT HAS_CARGO ||| hold INTAKE button: DEPLOY and INTAKE
@@ -175,6 +190,7 @@ public class Robot extends TimedRobot {
 
     }
   }
+  // ________________________________________________________________
 
   // misc.
   private enum ControlMode {

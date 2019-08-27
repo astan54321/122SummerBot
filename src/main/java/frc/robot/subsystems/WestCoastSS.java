@@ -26,20 +26,24 @@ public class WestCoastSS extends Subsystem {
     initIMU();
     // initEncoders(); // these bois not on the bot yet
   }
+  // ________________________________________________________________
 
   public void setMaxSpeeds(double maxDrive, double maxRotation) {
     SPEED_MAX = maxDrive;
     ROTATION_MAX = maxRotation;
   }
+  // ________________________________________________________________
 
   public void setMode(DriveMode mode) {
     DRIVE_MODE = mode;
   }
+  // ________________________________________________________________
 
   public void setCoast() {
     leftMaster.setNeutralMode(NeutralMode.Coast);
     rightMaster.setNeutralMode(NeutralMode.Coast);
   }
+  // ________________________________________________________________
 
   public void drive(double speedInput, double rotationInput) {
     double speed = speedInput * SPEED_MAX * -1;
@@ -53,22 +57,27 @@ public class WestCoastSS extends Subsystem {
       break;
     }
   }
+  // ________________________________________________________________
 
   public void setLeftRight(double leftSpeed, double rightSpeed) {
     drive.tankDrive(leftSpeed, rightSpeed);
   }
+  // ________________________________________________________________
 
   public double getAngle() {
     return navx.getYaw();
   }
+  // ________________________________________________________________
 
   public double getLeftEnc() {
     return leftEnc.getDistance();
   }
+  // ________________________________________________________________
 
   public double getRightEnc() {
     return rightEnc.getDistance();
   }
+  // ________________________________________________________________
 
   private void initMotors() {
     leftMaster = new WPI_TalonSRX(RobotMap.FRONT_LEFT_MOTOR);
@@ -86,6 +95,7 @@ public class WestCoastSS extends Subsystem {
 
     drive = new DifferentialDrive(leftMaster, rightMaster);
   }
+  // ________________________________________________________________
 
   private void resetMotors() {
     leftMaster.configFactoryDefault();
@@ -93,22 +103,26 @@ public class WestCoastSS extends Subsystem {
     leftSlave.configFactoryDefault();
     rightSlave.configFactoryDefault();
   }
+  // ________________________________________________________________
 
   // add try/catch
   private void initIMU() {
     navx = new AHRS(SPI.Port.kMXP);
     navx.reset();
   }
+  // ________________________________________________________________
 
   private void initEncoders() {
     leftEnc = new Encoder(RobotMap.LEFT_ENC_CHANNEL_A, RobotMap.LEFT_ENC_CHANNEL_B);
     rightEnc = new Encoder(RobotMap.RIGHT_ENC_CHANNEL_A, RobotMap.RIGHT_ENC_CHANNEL_B);
 
   }
+  // ________________________________________________________________
 
   @Override
   public void initDefaultCommand() {
   }
+  // ________________________________________________________________
 
   public enum DriveMode {
     kArcade, kCurve;
