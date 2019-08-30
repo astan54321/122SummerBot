@@ -4,6 +4,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Hatch;
+import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.WestCoastSS;
 import frc.robot.subsystems.WestCoastSS.DriveMode;
 
@@ -13,6 +14,7 @@ public class Robot extends TimedRobot {
   private WestCoastSS alphaChi;
   private Arm arm;
   private Hatch hatch;
+  private Climb climb;
   private final ControlMode CONTROL_MODE = ControlMode.kGTA;
 
   // publics
@@ -23,6 +25,7 @@ public class Robot extends TimedRobot {
     initDriveSubsystem();
     initCargoSubsystem();
     initHatchSubsystem();
+    initClimbSubsystem();
   }
 
   @Override
@@ -46,6 +49,7 @@ public class Robot extends TimedRobot {
     driveControl();
     cargoControlTest();
     hatchControlTest();
+    climbControlTest();
   }
 
   @Override
@@ -69,6 +73,10 @@ public class Robot extends TimedRobot {
     hatch = new Hatch();
   }
 
+  private void initClimbSubsystem() {
+    climb = new Climb();
+  }
+
   private void initDS() {
     ds = new DriverStation();
   }
@@ -78,6 +86,7 @@ public class Robot extends TimedRobot {
     switch (CONTROL_MODE) {
     case kGTA:
       alphaChi.drive(ds.getGTASpeed(), ds.getTurn());
+      //if (climb.getDeployed() && ds.getGTASpeed() > 51) {arm.bottomRollerManual(0.7);} //test w/o first
       break;
     case kSticks:
       alphaChi.drive(ds.getThrottle(), ds.getTurn());
@@ -173,6 +182,16 @@ public class Robot extends TimedRobot {
           hatch.retract();
       }
 
+    }
+  }
+
+  private void climbControlTest() {
+    if (ds.getClimb()) {
+      if (!climb.getDeployed()) 
+        climb.deploy();
+      else
+        climb.retract();
+      //can combine with getDeployed and the drivetrain for climb
     }
   }
 

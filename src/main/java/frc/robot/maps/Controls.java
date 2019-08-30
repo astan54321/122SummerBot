@@ -10,6 +10,7 @@ public class Controls {
     public static final int GTA_ACCEL = 3; // Driver right trigger
     public static final int GTA_DECELL = 2; // Driver left trigger
     public static final int DRIVE_TANK_RIGHT = 0;
+    public static final int CLIMB_CYLINDERS = 4;
 
     // OPERATOR
     public static final int MANUAL_ARM_AXIS = 1;

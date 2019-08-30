@@ -31,6 +31,10 @@ public class DriverStation {
         return driver.getRawAxis(Controls.DRIVE_TANK_RIGHT);
     }
 
+    public boolean getClimb() {
+        return driver.getRawButton(Controls.CLIMB_CYLINDERS);
+    }
+
     // Operator methods
 
     public double getManualArmMove() {
