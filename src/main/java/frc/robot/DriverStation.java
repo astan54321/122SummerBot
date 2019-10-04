@@ -32,7 +32,7 @@ public class DriverStation {
     }
 
     public boolean getClimb() {
-        return driver.getRawButton(Controls.CLIMB_CYLINDERS);
+        return driver.getRawButtonPressed(Controls.CLIMB_CYLINDERS);
     }
 
     // Operator methods

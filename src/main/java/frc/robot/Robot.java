@@ -185,6 +185,9 @@ public class Robot extends TimedRobot {
     }
   }
 
+  /************************************************
+  ***************** UNTESTED CODE *****************
+  ************************************************/
   private void climbControlTest() {
     if (ds.getClimb()) {
       if (!climb.getDeployed()) 
