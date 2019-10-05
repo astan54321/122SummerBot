@@ -32,7 +32,8 @@ public class DriverStation {
     }
 
     public boolean getClimb() {
-        return driver.getRawButtonPressed(Controls.CLIMB_CYLINDERS);
+        return driver.getRawButtonPressed(Controls.CLIMB_CYLINDERS_A)
+                && driver.getRawButtonPressed(Controls.CLIMB_CYLINDERS_B);
     }
 
     // Operator methods
@@ -58,25 +59,26 @@ public class DriverStation {
     }
 
     public boolean getHatchDeploy() {
-        return operator.getRawButton(4);
+        return operator.getRawButton(Controls.HATCH_OUT);
     }
 
     public boolean getHatchRetract() {
-        return operator.getRawButton(3);
+        return operator.getRawButton(Controls.HATCH_IN);
     }
 
     // -----------------------------------
 
     public boolean getTopRolerIn() {
         return operator.getRawButton(5);
+        // return operator.getRawAxis(axis)
     }
 
     public boolean getTopRolerOut() {
         return operator.getRawButton(6);
     }
 
-    public boolean getBottomRolerIn() {
-        return operator.getRawAxis(2) > 0.05;
+    public double getRollers() {
+        return operator.getRawAxis(3) - operator.getRawAxis(2);
     }
 
     public boolean getBottomRolerOut() {

@@ -10,7 +10,9 @@ public class Constants {
     // cargo mech
     public static final double CARGO_INTAKE_SPEED = 0;
     public static final double CARGO_EJECT_SPEED = 0;
-    public static final double CARGO_STALL_SPEED = 0;
+    public static final double CARGO_STALL_SPEED = 0.125;
+    public static final double ARM_SPEED = 0.6;
+    public static final double ARM_STALL = -0.025;
     public static final boolean ARM_INVERTED = false;
     public static final boolean TOP_ROLLER_INVERTED = false;
     public static final boolean BOTTOM_ROLLER_INVERTED = false;

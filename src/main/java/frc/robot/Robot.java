@@ -1,10 +1,15 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.maps.RobotMap;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Hatch;
 import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Hatch;
 import frc.robot.subsystems.WestCoastSS;
 import frc.robot.subsystems.WestCoastSS.DriveMode;
 
@@ -16,6 +21,11 @@ public class Robot extends TimedRobot {
   private Hatch hatch;
   private Climb climb;
   private final ControlMode CONTROL_MODE = ControlMode.kGTA;
+  private Compressor compressor;
+  private UsbCamera hatchCam;
+  private final int resMod = 1;
+  private final int width = 160 * resMod;
+  private final int height = 120 * resMod;
 
   // publics
   // in-match control
@@ -26,6 +36,8 @@ public class Robot extends TimedRobot {
     initCargoSubsystem();
     initHatchSubsystem();
     initClimbSubsystem();
+    initCamera();
+    initCompressor(true);
   }
 
   @Override
@@ -81,12 +93,28 @@ public class Robot extends TimedRobot {
     ds = new DriverStation();
   }
 
+  private void initCamera() {
+    hatchCam = CameraServer.getInstance().startAutomaticCapture();
+    // hatchCam.setExposureAuto();
+    // hatchCam.setWhiteBalanceAuto();
+    // hatchCam.setExposureHoldCurrent();
+    hatchCam.setFPS(30);
+    hatchCam.setResolution(width, height);
+    // hatchCam.setWhiteBalanceHoldCurrent();
+  }
+
+  private void initCompressor(boolean enabled) {
+    compressor = new Compressor(RobotMap.PCM_CHANNEL);
+    compressor.setClosedLoopControl(enabled);
+  }
+
   // control methods for individual subsystems
   private void driveControl() {
     switch (CONTROL_MODE) {
     case kGTA:
       alphaChi.drive(ds.getGTASpeed(), ds.getTurn());
-      //if (climb.getDeployed() && ds.getGTASpeed() > 51) {arm.bottomRollerManual(0.7);} //test w/o first
+      // if (climb.getDeployed() && ds.getGTASpeed() > 51)
+      // {arm.bottomRollerManual(0.7);} //test w/o first
       break;
     case kSticks:
       alphaChi.drive(ds.getThrottle(), ds.getTurn());
@@ -98,23 +126,15 @@ public class Robot extends TimedRobot {
   }
 
   private void cargoControlTest() {
-    arm.moveArmManual(ds.getManualArmMove() * 0.6 - .035);
+    arm.moveArmManual(ds.getManualArmMove() * Constants.ARM_SPEED + Constants.ARM_STALL);
 
-    double speed = 1;
-    if (ds.getTopRolerIn()) {
-      arm.topRollerManual(speed);
-    } else if (ds.getTopRolerOut()) {
-      arm.topRollerManual(-speed);
+    if (Math.abs(ds.getRollers()) < 0.05) {
+      final double holdSpeed = Constants.CARGO_STALL_SPEED;
+      arm.topRollerManual(-holdSpeed);
+      arm.bottomRollerManual(holdSpeed);
     } else {
-      arm.topRollerManual(0);
-    }
-
-    if (ds.getBottomRolerIn()) {
-      arm.bottomRollerManual(speed);
-    } else if (ds.getBottomRolerOut()) {
-      arm.bottomRollerManual(-speed);
-    } else {
-      arm.bottomRollerManual(0);
+      arm.topRollerManual(ds.getRollers());
+      arm.bottomRollerManual(ds.getRollers());
     }
   }
 
@@ -126,7 +146,7 @@ public class Robot extends TimedRobot {
 
   private void cargoControlMatch() {
     if (!hatch.hasHatch()) {
-
+      
       if (arm.hasCargo()) {
         // UP position
         arm.eject(ds.getCargoEject());
@@ -154,15 +174,24 @@ public class Robot extends TimedRobot {
     } else {
       hatch.intakeManual(0);
     }
-
+    
     if (ds.getHatchDeploy()) {
       hatch.deploy();
     } else if (ds.getHatchRetract()) {
       hatch.retract();
     }
-
+    
   }
-
+  
+  private void climbControlTest() {
+    if (ds.getClimb()) {
+      if (!climb.getDeployed())
+        climb.deploy();
+      else
+        climb.retract();
+      // can combine with getDeployed and the drivetrain for climb
+    }
+  }
   /**
    * ONLY functional if NOT HAS_CARGO ||| hold INTAKE button: DEPLOY and INTAKE
    * ||| hold EJECT button: EJECT (RETRACT when EJECT button released)
@@ -185,18 +214,6 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /************************************************
-  ***************** UNTESTED CODE *****************
-  ************************************************/
-  private void climbControlTest() {
-    if (ds.getClimb()) {
-      if (!climb.getDeployed()) 
-        climb.deploy();
-      else
-        climb.retract();
-      //can combine with getDeployed and the drivetrain for climb
-    }
-  }
 
   // misc.
   private enum ControlMode {

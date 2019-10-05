@@ -15,11 +15,12 @@ public class Arm extends Subsystem {
 
   private WPI_VictorSPX topRoller, bottomRoller;
   private WPI_TalonSRX armMaster, armSlave;
-  private DigitalInput cargoCollected;
-  private AnalogInput armPosition;
+  private DigitalInput cargoCollected, topLimit;
+  // private AnalogInput armPosition;
 
   public Arm() {
     initMotors();
+    topLimit = new DigitalInput(2);
     // TO BE ADDED TO ROBOT
     // initSensors();
   }
@@ -29,6 +30,8 @@ public class Arm extends Subsystem {
    */
 
   public void moveArmManual(double speed) {
+    if (speed < 0 && topLimit.get())
+      speed = 0;
     armMaster.set(speed);
   }
 
