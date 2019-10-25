@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import frc.robot.Constants;
 import frc.robot.maps.RobotMap;
 
@@ -15,7 +16,7 @@ public class Arm extends Subsystem {
 
   private WPI_VictorSPX topRoller, bottomRoller;
   private WPI_TalonSRX armMaster, armSlave;
-  private DigitalInput cargoCollected;
+  private DigitalInput cargoCollected, topPos, bottomPos;
   private AnalogInput armPosition;
 
   public Arm() {
@@ -38,6 +39,22 @@ public class Arm extends Subsystem {
 
   public void bottomRollerManual(double intakeSpeed) {
     bottomRoller.set(intakeSpeed);
+  }
+
+  /**
+   * stops the top rollers on the arm
+   * @author Levi Walker
+   */
+  public void topRollerCoast() {
+    bottomRoller.stopMotor();
+  }
+  
+  /**
+   * stops the bottom rollers on the arm
+   * @author Levi Walker
+   */
+  public void bottomRollerCoast() {
+    bottomRoller.stopMotor();
   }
 
   /*
@@ -75,6 +92,18 @@ public class Arm extends Subsystem {
     return cargoCollected.get();
   }
 
+  public boolean isAtTop() {
+    return topPos.get();
+  }
+
+  public boolean isAtBottom() {
+    return bottomPos.get();
+  }
+
+  public double getPotAngle() {
+    return armPosition.getValue();
+  }
+
   private void resetMotors() {
     topRoller.configFactoryDefault();
     bottomRoller.configFactoryDefault();
@@ -107,6 +136,8 @@ public class Arm extends Subsystem {
   private void initSensors() {
     cargoCollected = new DigitalInput(RobotMap.CARGO_COLLECTED_SWITCH);
     armPosition = new AnalogInput(RobotMap.ARM_POSITION_POT);
+    // topPos = new DigitalInput(RobotMap.MAX_ARM_POS);
+    // bottomPos = new DigitalInput(RobotMap.BOT_ARM_POS);
   }
 
   @Override

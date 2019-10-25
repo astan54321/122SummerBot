@@ -10,7 +10,7 @@ public class Controls {
     public static final int GTA_ACCEL = 3; // Driver right trigger
     public static final int GTA_DECELL = 2; // Driver left trigger
     public static final int DRIVE_TANK_RIGHT = 0;
-    public static final int CLIMB_CYLINDERS = 4;
+    public static final int CLIMB_CYLINDERS = 8; //option button
 
     // OPERATOR
     public static final int MANUAL_ARM_AXIS = 1;
@@ -18,5 +18,10 @@ public class Controls {
     public static final int CARGO_EJECT = 6;
     public static final int HATCH_INTAKE = 1;
     public static final int HATCH_EJECT = 2;
+    public static final int HATCH_AXIS = 5;
+    public static final int LEFT_BUMPER = 5;
+    public static final int RIGHT_BUMPER = 6;
+    public static final int HATCH_DEPLOY = 4;
+    public static final int HATCH_RETRACT = 3;
 
 }

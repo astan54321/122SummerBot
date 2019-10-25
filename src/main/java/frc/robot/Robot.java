@@ -47,8 +47,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveControl();
-    cargoControlTest();
-    hatchControlTest();
+    cargoControlTest(); //newCargoTest();
+    hatchControlTest(); //newHatchTest();
     climbControlTest();
   }
 
@@ -184,6 +184,46 @@ public class Robot extends TimedRobot {
 
     }
   }
+
+  /************** NEEDS TO BE TESTED **************/
+  // private void newHatchTest() {
+  //   if (!arm.hasCargo()) {
+  //     if (ds.getHatchRollers() > 0.05 || ds.getHatchRollers() < -0.05) //change based on testing
+  //     {
+  //       if (!hatch.getDeployed()) {
+  //         hatch.deploy();
+  //       }
+  //       hatch.intakeManual(ds.getHatchRollers());
+  //     } else if (ds.getHatchDeploy()) {
+  //       if (!hatch.getDeployed()) {
+  //         hatch.deploy();
+  //       }  
+  //     } else if (ds.getHatchRetract()) {
+  //       if (hatch.getDeployed()) {
+  //         hatch.retract();
+  //       }
+  //     }
+  //   } else {
+  //     hatch.stopIntake();
+  //   }
+  // }
+
+  // private void newCargoTest() {
+  //   if (!hatch.hasHatch()) {
+  //     if (ds.getRollersIn()) {
+  //       arm.topRollerManual(Constants.CARGO_INTAKE_SPEED);
+  //       arm.bottomRollerCoast();
+
+  //     } else if (ds.getRollersOut()) {
+  //       arm.topRollerManual(Constants.CARGO_EJECT_SPEED);
+  //       arm.bottomRollerManual(Constants.CARGO_EJECT_SPEED);
+
+  //     } else {
+  //       arm.topRollerManual(Constants.CARGO_STALL_SPEED);
+  //       arm.bottomRollerManual(Constants.CARGO_STALL_SPEED);
+  //     }
+  //   }
+  // }
 
   /************************************************
   ***************** UNTESTED CODE *****************

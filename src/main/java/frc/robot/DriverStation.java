@@ -58,11 +58,19 @@ public class DriverStation {
     }
 
     public boolean getHatchDeploy() {
-        return operator.getRawButton(4);
+        return operator.getRawButton(Controls.LEFT_BUMPER);
+    }
+
+    /**
+     * to intake the hatch
+     * @return the right y-axis value multipied by -1
+     */
+    public double getHatchRollers() {
+        return -1 * operator.getRawAxis(Controls.HATCH_AXIS); //-1 from testing
     }
 
     public boolean getHatchRetract() {
-        return operator.getRawButton(3);
+        return operator.getRawButton(Controls.RIGHT_BUMPER);
     }
 
     // -----------------------------------
@@ -80,6 +88,24 @@ public class DriverStation {
     }
 
     public boolean getBottomRolerOut() {
+        return operator.getRawAxis(3) > 0.05;
+    }
+
+    /**
+     * gets the value of the left trigger
+     * @return whether the value of the left trigger is greater than 0.05 or not
+     * @author Levi Walker
+     */
+    public boolean getRollersIn() {
+        return operator.getRawAxis(2) > 0.05;
+    }
+
+    /**
+     * gets the value of the right trigger
+     * @return whether the value of the right trigger is greater than 0.05 or not
+     * @author Levi Walker
+     */
+    public boolean getRollersOut() {
         return operator.getRawAxis(3) > 0.05;
     }
 

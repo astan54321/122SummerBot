@@ -62,7 +62,7 @@ public class Hatch extends Subsystem {
     deployer.set(Constants.RETRACT);
   }
 
-  private boolean getDeployed() {
+  public boolean getDeployed() {
     return deployer.get() == Constants.DEPLOY;
   }
 
