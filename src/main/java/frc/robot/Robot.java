@@ -254,6 +254,21 @@ public class Robot extends TimedRobot {
   //   }
   // }
 
+  private void seperateIntakeTest() {
+    double speed = 0.7;
+    if (ds.getOpOne()) {
+      hatch.regularIntake(speed);
+    } else if (ds.getOpTwo()) {
+      hatch.regularIntake(-speed);
+    } else if (ds.getOpThree()) {
+      hatch.intakeHelper(speed);
+    } else if(ds.getOpFour()) {
+      hatch.intakeHelper(-speed);
+    } else {
+      hatch.stopIntake();
+    }
+  }
+
   /************************************************
   ***************** UNTESTED CODE *****************
   ************************************************/

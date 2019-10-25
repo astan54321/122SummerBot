@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.maps.RobotMap;
@@ -13,6 +14,7 @@ import frc.robot.maps.RobotMap;
 public class Hatch extends Subsystem {
 
   private WPI_VictorSPX intake;
+  private VictorSP intakeHelper;
   private DoubleSolenoid deployer;
   private DigitalInput hatchCollected;
 
@@ -25,6 +27,7 @@ public class Hatch extends Subsystem {
 
   public void intakeManual(double speed) {
     intake.set(speed);
+    intakeHelper.set(-speed);
   }
 
   public void intake(boolean intake) {
@@ -35,6 +38,14 @@ public class Hatch extends Subsystem {
 
   public void intake() {
     intake(true);
+  }
+
+  public void regularIntake(double intakeSpeed) {
+    intake.set(intakeSpeed);
+  }
+
+  public void intakeHelper(double intakeSpeed) {
+    intakeHelper.set(intakeSpeed);
   }
 
   public void eject(boolean eject) {
@@ -74,6 +85,7 @@ public class Hatch extends Subsystem {
 
   private void initMotors() {
     intake = new WPI_VictorSPX(RobotMap.HATCH_INTAKE);
+    intakeHelper = new VictorSP(RobotMap.HATCH_INTAKE_HELPER);
 
     resetMotors();
 

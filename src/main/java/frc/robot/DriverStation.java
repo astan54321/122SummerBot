@@ -113,6 +113,23 @@ public class DriverStation {
         return operator.getRawAxis(2) - operator.getRawAxis(3);
     }
 
+    public boolean getOpOne() {
+        return operator.getRawButton(1);
+    }
+
+    public boolean getOpTwo() {
+        return operator.getRawButton(2);
+    }
+
+    public boolean getOpThree() {
+        return operator.getRawButton(3);
+    }
+
+    public boolean getOpFour() {
+        return operator.getRawButton(4);
+    }
+
+
     // Misc. utils
 
 }

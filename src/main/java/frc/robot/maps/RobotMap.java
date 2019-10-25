@@ -19,12 +19,13 @@ public class RobotMap {
     public static final int TOP_ROLLER_MOTOR = 13;
     public static final int BOTTOM_ROLLER_MOTOR = 14;
     public static final int CARGO_COLLECTED_SWITCH = 0; //we forgot this one
-    public static final int ARM_POSITION_POT = 0;
+    public static final int ARM_POSITION_POT = 1;
     public static final int MAX_ARM_POS = 2;
     public static final int BOT_ARM_POS = 1;
 
     // Hatch mech
     public static final int HATCH_INTAKE = 21;
+    public static final int HATCH_INTAKE_HELPER = 0; //pwm VictorSP
     public static final int HATCH_COLLECTED_SWITCH = 0;
 
     // Pneumatics
