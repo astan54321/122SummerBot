@@ -109,6 +109,10 @@ public class DriverStation {
         return operator.getRawAxis(3) > 0.05;
     }
 
+    public double getRollers() {
+        return operator.getRawAxis(2) - operator.getRawAxis(3);
+    }
+
     // Misc. utils
 
 }

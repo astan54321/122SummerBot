@@ -19,6 +19,7 @@ public class Hatch extends Subsystem {
   public Hatch() {
     initMotors();
     initPneumatics();
+    hatchCollected = new DigitalInput(RobotMap.HATCH_COLLECTED_SWITCH);
     // initSensors();
   }
 
@@ -59,7 +60,8 @@ public class Hatch extends Subsystem {
   }
 
   public void retract() {
-    deployer.set(Constants.RETRACT);
+    if (!hasHatch())
+      deployer.set(Constants.RETRACT);
   }
 
   public boolean getDeployed() {
@@ -82,9 +84,9 @@ public class Hatch extends Subsystem {
     deployer = new DoubleSolenoid(RobotMap.PCM_CHANNEL, RobotMap.HATCH_CHANNEL_A, RobotMap.HATCH_CHANNEL_B);
   }
 
-  private void initSensors() {
-    hatchCollected = new DigitalInput(RobotMap.HATCH_COLLECTED_SWITCH);
-  }
+  // private void initSensors() {
+  // hatchCollected = new DigitalInput(RobotMap.HATCH_COLLECTED_SWITCH);
+  // }
 
   private void resetMotors() {
     intake.configFactoryDefault();

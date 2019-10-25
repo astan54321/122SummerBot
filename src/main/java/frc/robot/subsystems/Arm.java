@@ -16,11 +16,12 @@ public class Arm extends Subsystem {
 
   private WPI_VictorSPX topRoller, bottomRoller;
   private WPI_TalonSRX armMaster, armSlave;
-  private DigitalInput cargoCollected, topPos, bottomPos;
+  private DigitalInput cargoCollected, topLimit, bottomLimit;
   private AnalogInput armPosition;
 
   public Arm() {
     initMotors();
+    topLimit = new DigitalInput(2);
     // TO BE ADDED TO ROBOT
     // initSensors();
   }
@@ -30,6 +31,8 @@ public class Arm extends Subsystem {
    */
 
   public void moveArmManual(double speed) {
+    if (speed < 0 && topLimit.get())
+      speed = 0;
     armMaster.set(speed);
   }
 
@@ -93,11 +96,11 @@ public class Arm extends Subsystem {
   }
 
   public boolean isAtTop() {
-    return topPos.get();
+    return topLimit.get();
   }
 
   public boolean isAtBottom() {
-    return bottomPos.get();
+    return bottomLimit.get();
   }
 
   public double getPotAngle() {
@@ -136,8 +139,8 @@ public class Arm extends Subsystem {
   private void initSensors() {
     cargoCollected = new DigitalInput(RobotMap.CARGO_COLLECTED_SWITCH);
     armPosition = new AnalogInput(RobotMap.ARM_POSITION_POT);
-    // topPos = new DigitalInput(RobotMap.MAX_ARM_POS);
-    // bottomPos = new DigitalInput(RobotMap.BOT_ARM_POS);
+    // topLimit = new DigitalInput(RobotMap.MAX_ARM_POS);
+    // bottomLimit = new DigitalInput(RobotMap.BOT_ARM_POS);
   }
 
   @Override

@@ -31,7 +31,7 @@ public class RobotMap {
     public static final int PCM_CHANNEL = 40;
     public static final int HATCH_CHANNEL_A = 0;
     public static final int HATCH_CHANNEL_B = 1;
-    public static final int CLIMB_CHANNEL_A = 2;
-    public static final int CLIMB_CHANNEL_B = 3;
+    public static final int CLIMB_CHANNEL_A = 3;
+    public static final int CLIMB_CHANNEL_B = 2;
 
 }
