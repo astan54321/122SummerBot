@@ -21,7 +21,7 @@ public class Hatch extends Subsystem {
   public Hatch() {
     initMotors();
     initPneumatics();
-    hatchCollected = new DigitalInput(RobotMap.HATCH_COLLECTED_SWITCH);
+    hatchCollected = new DigitalInput(0);
     // initSensors();
   }
 

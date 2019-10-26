@@ -4,7 +4,6 @@ package frc.robot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.maps.RobotMap;
 import frc.robot.subsystems.Arm;
@@ -59,9 +58,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveControl();
-    cargoControlTest(); //newCargoTest();
-    hatchControlTest(); //newHatchTest();
+    newCargoTest();
+    newHatchTest();
     climbControlTest();
+    limitTest();
   }
 
   @Override
@@ -215,44 +215,44 @@ public class Robot extends TimedRobot {
   }
 
   /************** NEEDS TO BE TESTED **************/
-  // private void newHatchTest() {
-  //   if (!arm.hasCargo()) {
-  //     if (ds.getHatchRollers() > 0.05 || ds.getHatchRollers() < -0.05) //change based on testing
-  //     {
-  //       if (!hatch.getDeployed()) {
-  //         hatch.deploy();
-  //       }
-  //       hatch.intakeManual(ds.getHatchRollers());
-  //     } else if (ds.getHatchDeploy()) {
-  //       if (!hatch.getDeployed()) {
-  //         hatch.deploy();
-  //       }  
-  //     } else if (ds.getHatchRetract()) {
-  //       if (hatch.getDeployed()) {
-  //         hatch.retract();
-  //       }
-  //     }
-  //   } else {
-  //     hatch.stopIntake();
-  //   }
-  // }
+  private void newHatchTest() {
+    if (!arm.hasCargo()) {
+      if (ds.getHatchRollers() > 0.05 || ds.getHatchRollers() < -0.05)
+      {
+        if (!hatch.getDeployed()) {
+          hatch.deploy();
+        }
+        hatch.intakeManual(ds.getHatchRollers());
+      } else if (ds.getHatchDeploy()) {
+        if (!hatch.getDeployed()) {
+          hatch.deploy();
+        }  
+      } else if (ds.getHatchRetract()) {
+        if (hatch.getDeployed()) {
+          hatch.retract();
+        }
+      }
+    } else {
+      hatch.stopIntake();
+    }
+  }
 
-  // private void newCargoTest() {
-  //   if (!hatch.hasHatch()) {
-  //     if (ds.getRollersIn()) {
-  //       arm.topRollerManual(Constants.CARGO_INTAKE_SPEED);
-  //       arm.bottomRollerCoast();
+  private void newCargoTest() {
+    if (!hatch.hasHatch()) {
+      if (ds.getRollersIn()) {
+        arm.topRollerManual(Constants.CARGO_INTAKE_SPEED);
+        arm.bottomRollerCoast();
 
-  //     } else if (ds.getRollersOut()) {
-  //       arm.topRollerManual(Constants.CARGO_EJECT_SPEED);
-  //       arm.bottomRollerManual(Constants.CARGO_EJECT_SPEED);
+      } else if (ds.getRollersOut()) {
+        arm.topRollerManual(Constants.CARGO_EJECT_SPEED);
+        arm.bottomRollerManual(Constants.CARGO_EJECT_SPEED);
 
-  //     } else {
-  //       arm.topRollerManual(Constants.CARGO_STALL_SPEED);
-  //       arm.bottomRollerManual(Constants.CARGO_STALL_SPEED);
-  //     }
-  //   }
-  // }
+      } else {
+        arm.topRollerManual(Constants.CARGO_STALL_SPEED);
+        arm.bottomRollerManual(Constants.CARGO_STALL_SPEED);
+      }
+    }
+  }
 
   private void seperateIntakeTest() {
     double speed = 0.7;
@@ -272,6 +272,11 @@ public class Robot extends TimedRobot {
   /************************************************
   ***************** UNTESTED CODE *****************
   ************************************************/
+
+  private void limitTest() {
+    System.out.println("Top Limit Switch: " + arm.isAtTop());
+    System.out.println("Bottom Limit Switch: " + arm.isAtBottom());
+  }
 
   // misc.
   private enum ControlMode {

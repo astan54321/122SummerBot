@@ -21,9 +21,7 @@ public class Arm extends Subsystem {
 
   public Arm() {
     initMotors();
-    topLimit = new DigitalInput(2);
-    // TO BE ADDED TO ROBOT
-    // initSensors();
+    initSensors();
   }
 
   /*
@@ -137,10 +135,10 @@ public class Arm extends Subsystem {
   }
 
   private void initSensors() {
-    cargoCollected = new DigitalInput(RobotMap.CARGO_COLLECTED_SWITCH);
-    armPosition = new AnalogInput(RobotMap.ARM_POSITION_POT);
-    // topLimit = new DigitalInput(RobotMap.MAX_ARM_POS);
-    // bottomLimit = new DigitalInput(RobotMap.BOT_ARM_POS);
+    cargoCollected = new DigitalInput(4);
+    //armPosition = new AnalogInput(RobotMap.ARM_POSITION_POT);
+    topLimit = new DigitalInput(2);
+    bottomLimit = new DigitalInput(1);
   }
 
   @Override
