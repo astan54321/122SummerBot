@@ -109,8 +109,35 @@ public class DriverStation {
         return operator.getRawAxis(3) > 0.05;
     }
 
+    /**
+     * gets value from button designated for "hold to drive straight"
+     * @return boolean: button value
+     */
+    public boolean getDriveStraight(){
+        return driver.getRawButton(1);
+    }
+
+    public boolean getCargoShip(){
+        return operator.getRawButton(Controls.ARM_CARGO);
+    }
+    
+    public boolean getRocket(){
+        return operator.getRawButton(Controls.ARM_ROCKET);
+    }
+    public boolean getStow(){
+        return operator.getRawButton(Controls.ARM_STOW);
+    }
+    
+    public boolean getDriveStraightStart(){
+        return driver.getRawButtonPressed(1);
+    }
+
     public double getRollers() {
         return operator.getRawAxis(2) - operator.getRawAxis(3);
+    }
+
+    public boolean getRollersActive(){
+        return Math.abs(getRollers()) > 0.05;
     }
 
     public boolean getOpOne() {

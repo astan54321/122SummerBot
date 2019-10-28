@@ -6,11 +6,13 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.maps.RobotMap;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Hatch;
 import frc.robot.subsystems.WestCoastSS;
+import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.WestCoastSS.DriveMode;
 
 public class Robot extends TimedRobot {
@@ -27,6 +29,8 @@ public class Robot extends TimedRobot {
   private final int width = 160 * resMod;
   private final int height = 120 * resMod;
 
+  private double targetAngle = 0;
+
   // publics
   // in-match control
   @Override
@@ -42,6 +46,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    telemetry();
+  }
+
+  public void telemetry() {
+    SmartDashboard.putNumber("Arm Angle", arm.getAngle());
+    SmartDashboard.putBoolean("Arm Down", arm.getBottom());
+    SmartDashboard.putBoolean("Arm Up", arm.getTop());
+    SmartDashboard.putBoolean("Has Hatch", hatch.hasHatch());
   }
 
   @Override
@@ -59,9 +71,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveControl();
-    cargoControlTest(); //newCargoTest();
-    hatchControlTest(); //newHatchTest();
-    climbControlTest();
+    cargoControlTest(); // newCargoTest();
+    hatchControlTest(); // newHatchTest();
+    climbControl();
   }
 
   @Override
@@ -95,12 +107,8 @@ public class Robot extends TimedRobot {
 
   private void initCamera() {
     hatchCam = CameraServer.getInstance().startAutomaticCapture();
-    // hatchCam.setExposureAuto();
-    // hatchCam.setWhiteBalanceAuto();
-    // hatchCam.setExposureHoldCurrent();
     hatchCam.setFPS(30);
     hatchCam.setResolution(width, height);
-    // hatchCam.setWhiteBalanceHoldCurrent();
   }
 
   private void initCompressor(boolean enabled) {
@@ -112,7 +120,13 @@ public class Robot extends TimedRobot {
   private void driveControl() {
     switch (CONTROL_MODE) {
     case kGTA:
-      alphaChi.drive(ds.getGTASpeed(), ds.getTurn());
+      // drive straight if a button is held, otherwise drive normal
+      if (ds.getDriveStraightStart())
+        targetAngle = alphaChi.getAngle();
+      if (ds.getDriveStraight())
+        alphaChi.driveStraight(ds.getGTASpeed(), targetAngle);
+      else
+        alphaChi.drive(ds.getGTASpeed(), ds.getTurn());
       // if (climb.getDeployed() && ds.getGTASpeed() > 51)
       // {arm.bottomRollerManual(0.7);} //test w/o first
       break;
@@ -144,27 +158,6 @@ public class Robot extends TimedRobot {
    * move arm to UP and EJECT
    */
 
-  private void cargoControlMatch() {
-    if (!hatch.hasHatch()) {
-      
-      if (arm.hasCargo()) {
-        // UP position
-        arm.eject(ds.getCargoEject());
-      } else if (ds.getCargoIntake()) {
-        // DOWN position
-        arm.intake();
-      } else {
-        arm.stopIntake();
-        if (ds.getCargoEject()) {
-          // UP position
-        }
-      }
-
-    }
-    // T E M P O R A R Y until POT attached to arm and positional control added
-    arm.moveArmManual(ds.getManualArmMove());
-  }
-
   private void hatchControlTest() {
     double speed = 0.7;
     if (ds.getHatchIntake()) {
@@ -172,18 +165,19 @@ public class Robot extends TimedRobot {
     } else if (ds.getHatchEject()) {
       hatch.intakeManual(-speed);
     } else {
+      // Maybe set to some small positive value so stall af?
       hatch.intakeManual(0);
     }
-    
+
     if (ds.getHatchDeploy()) {
       hatch.deploy();
     } else if (ds.getHatchRetract()) {
       hatch.retract();
     }
-    
+
   }
-  
-  private void climbControlTest() {
+
+  private void climbControl() {
     if (ds.getClimb()) {
       if (!climb.getDeployed())
         climb.deploy();
@@ -192,66 +186,61 @@ public class Robot extends TimedRobot {
       // can combine with getDeployed and the drivetrain for climb
     }
   }
-  /**
-   * ONLY functional if NOT HAS_CARGO ||| hold INTAKE button: DEPLOY and INTAKE
-   * ||| hold EJECT button: EJECT (RETRACT when EJECT button released)
-   */
-  private void hatchControlMatch() {
-    if (!arm.hasCargo()) {
 
-      if (hatch.hasHatch()) {
-        hatch.deploy();
-        hatch.eject(ds.getHatchEject());
-      } else if (ds.getHatchIntake()) {
-        hatch.deploy();
-        hatch.intake();
-      } else {
-        hatch.stopIntake();
-        if (ds.getHatchRetract())
-          hatch.retract();
-      }
+  /************************************************
+   ***************** UNTESTED CODE *****************
+   ************************************************/
 
-    }
+  // DO NOT USE until POT tested and positon values set in Constants
+  public void armControlPosition() {
+    ArmPosition actual = ArmPosition.STOW;
+    if (ds.getRollersActive())
+      actual = ArmPosition.PICKUP;
+    else if (ds.getCargoShip())
+      actual = ArmPosition.CARGO;
+    else if (ds.getRocket())
+      actual = ArmPosition.ROCKET;
+
+    arm.keepAngle(actual);
   }
-
-  /************** NEEDS TO BE TESTED **************/
   // private void newHatchTest() {
-  //   if (!arm.hasCargo()) {
-  //     if (ds.getHatchRollers() > 0.05 || ds.getHatchRollers() < -0.05) //change based on testing
-  //     {
-  //       if (!hatch.getDeployed()) {
-  //         hatch.deploy();
-  //       }
-  //       hatch.intakeManual(ds.getHatchRollers());
-  //     } else if (ds.getHatchDeploy()) {
-  //       if (!hatch.getDeployed()) {
-  //         hatch.deploy();
-  //       }  
-  //     } else if (ds.getHatchRetract()) {
-  //       if (hatch.getDeployed()) {
-  //         hatch.retract();
-  //       }
-  //     }
-  //   } else {
-  //     hatch.stopIntake();
-  //   }
+  // if (!arm.hasCargo()) {
+  // if (ds.getHatchRollers() > 0.05 || ds.getHatchRollers() < -0.05) //change
+  // based on testing
+  // {
+  // if (!hatch.getDeployed()) {
+  // hatch.deploy();
+  // }
+  // hatch.intakeManual(ds.getHatchRollers());
+  // } else if (ds.getHatchDeploy()) {
+  // if (!hatch.getDeployed()) {
+  // hatch.deploy();
+  // }
+  // } else if (ds.getHatchRetract()) {
+  // if (hatch.getDeployed()) {
+  // hatch.retract();
+  // }
+  // }
+  // } else {
+  // hatch.stopIntake();
+  // }
   // }
 
   // private void newCargoTest() {
-  //   if (!hatch.hasHatch()) {
-  //     if (ds.getRollersIn()) {
-  //       arm.topRollerManual(Constants.CARGO_INTAKE_SPEED);
-  //       arm.bottomRollerCoast();
+  // if (!hatch.hasHatch()) {
+  // if (ds.getRollersIn()) {
+  // arm.topRollerManual(Constants.CARGO_INTAKE_SPEED);
+  // arm.bottomRollerCoast();
 
-  //     } else if (ds.getRollersOut()) {
-  //       arm.topRollerManual(Constants.CARGO_EJECT_SPEED);
-  //       arm.bottomRollerManual(Constants.CARGO_EJECT_SPEED);
+  // } else if (ds.getRollersOut()) {
+  // arm.topRollerManual(Constants.CARGO_EJECT_SPEED);
+  // arm.bottomRollerManual(Constants.CARGO_EJECT_SPEED);
 
-  //     } else {
-  //       arm.topRollerManual(Constants.CARGO_STALL_SPEED);
-  //       arm.bottomRollerManual(Constants.CARGO_STALL_SPEED);
-  //     }
-  //   }
+  // } else {
+  // arm.topRollerManual(Constants.CARGO_STALL_SPEED);
+  // arm.bottomRollerManual(Constants.CARGO_STALL_SPEED);
+  // }
+  // }
   // }
 
   private void seperateIntakeTest() {
@@ -262,16 +251,12 @@ public class Robot extends TimedRobot {
       hatch.regularIntake(-speed);
     } else if (ds.getOpThree()) {
       hatch.intakeHelper(speed);
-    } else if(ds.getOpFour()) {
+    } else if (ds.getOpFour()) {
       hatch.intakeHelper(-speed);
     } else {
       hatch.stopIntake();
     }
   }
-
-  /************************************************
-  ***************** UNTESTED CODE *****************
-  ************************************************/
 
   // misc.
   private enum ControlMode {

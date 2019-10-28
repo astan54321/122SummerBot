@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -15,16 +14,14 @@ public class WestCoastSS extends Subsystem {
   private WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave;
   private DifferentialDrive drive;
   private AHRS navx;
-  private Encoder leftEnc, rightEnc;
   private double SPEED_MAX, ROTATION_MAX;
-  private final double DISTANCE_PER_ENCODER_TICK = 0 * Math.PI; // update this before using duh
   private DriveMode DRIVE_MODE;
+  private double driveStraightP = 0.7; // tweak this if needed
 
   // defaults to curveDrive
   public WestCoastSS() {
     initMotors();
     initIMU();
-    // initEncoders(); // these bois not on the bot yet
   }
 
   public void setMaxSpeeds(double maxDrive, double maxRotation) {
@@ -44,6 +41,7 @@ public class WestCoastSS extends Subsystem {
   public void drive(double speedInput, double rotationInput) {
     double speed = speedInput * SPEED_MAX * -1;
     double rotation = rotationInput * ROTATION_MAX;
+
     switch (DRIVE_MODE) {
     case kArcade:
       drive.arcadeDrive(speed, rotation);
@@ -54,20 +52,17 @@ public class WestCoastSS extends Subsystem {
     }
   }
 
+  public void driveStraight(double speedInput, double targetAngle){
+    double errorCorrect = driveStraightP * (targetAngle - getAngle());
+    drive(speedInput, errorCorrect);
+  }
+
   public void setLeftRight(double leftSpeed, double rightSpeed) {
     drive.tankDrive(leftSpeed, rightSpeed);
   }
 
   public double getAngle() {
     return navx.getYaw();
-  }
-
-  public double getLeftEnc() {
-    return leftEnc.getDistance();
-  }
-
-  public double getRightEnc() {
-    return rightEnc.getDistance();
   }
 
   private void initMotors() {
@@ -98,12 +93,6 @@ public class WestCoastSS extends Subsystem {
   private void initIMU() {
     navx = new AHRS(SPI.Port.kMXP);
     navx.reset();
-  }
-
-  private void initEncoders() {
-    leftEnc = new Encoder(RobotMap.LEFT_ENC_CHANNEL_A, RobotMap.LEFT_ENC_CHANNEL_B);
-    rightEnc = new Encoder(RobotMap.RIGHT_ENC_CHANNEL_A, RobotMap.RIGHT_ENC_CHANNEL_B);
-
   }
 
   @Override

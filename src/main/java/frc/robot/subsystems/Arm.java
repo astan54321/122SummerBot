@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import frc.robot.Constants;
 import frc.robot.maps.RobotMap;
 
@@ -19,15 +18,15 @@ public class Arm extends Subsystem {
   private DigitalInput cargoCollected, topLimit, bottomLimit;
   private AnalogInput armPosition;
 
+  private double kP = 0.03;
+
   public Arm() {
     initMotors();
-    topLimit = new DigitalInput(2);
-    // TO BE ADDED TO ROBOT
-    // initSensors();
+    initSensors();
   }
 
   /*
-   * UP is _____ (-/+) DOWN is ____ (-/+)
+   * UP is <0 (-) DOWN is >0 (+)
    */
 
   public void moveArmManual(double speed) {
@@ -46,45 +45,20 @@ public class Arm extends Subsystem {
 
   /**
    * stops the top rollers on the arm
+   * 
    * @author Levi Walker
    */
   public void topRollerCoast() {
-    bottomRoller.stopMotor();
+    topRoller.setNeutralMode(NeutralMode.Coast);
   }
-  
+
   /**
    * stops the bottom rollers on the arm
+   * 
    * @author Levi Walker
    */
   public void bottomRollerCoast() {
-    bottomRoller.stopMotor();
-  }
-
-  /*
-   * Intakes if a button is pressed, AND with hasCargo() once limit switch
-   * installed on bot
-   */
-  public void intake(boolean intake) {
-    double intakeSpeed = intake ? Constants.CARGO_INTAKE_SPEED : Constants.CARGO_STALL_SPEED;
-    topRollerManual(intakeSpeed);
-  }
-
-  public void eject(boolean eject) {
-    double ejectSpeed = eject ? Constants.CARGO_EJECT_SPEED : Constants.CARGO_STALL_SPEED;
-    topRollerManual(ejectSpeed);
-  }
-
-  public void intake() {
-    intake(true);
-  }
-
-  public void eject() {
-    eject(true);
-  }
-
-  public void stall() {
-    intake(false);
-    eject(false);
+    bottomRoller.setNeutralMode(NeutralMode.Coast);
   }
 
   public void stopIntake() {
@@ -95,15 +69,15 @@ public class Arm extends Subsystem {
     return cargoCollected.get();
   }
 
-  public boolean isAtTop() {
+  public boolean getTop() {
     return topLimit.get();
   }
 
-  public boolean isAtBottom() {
+  public boolean getBottom() {
     return bottomLimit.get();
   }
 
-  public double getPotAngle() {
+  public double getAngle() {
     return armPosition.getValue();
   }
 
@@ -137,13 +111,40 @@ public class Arm extends Subsystem {
   }
 
   private void initSensors() {
-    cargoCollected = new DigitalInput(RobotMap.CARGO_COLLECTED_SWITCH);
+    // cargoCollected = new DigitalInput(RobotMap.CARGO_COLLECTED_SWITCH);
     armPosition = new AnalogInput(RobotMap.ARM_POSITION_POT);
-    // topLimit = new DigitalInput(RobotMap.MAX_ARM_POS);
-    // bottomLimit = new DigitalInput(RobotMap.BOT_ARM_POS);
+    topLimit = new DigitalInput(RobotMap.MAX_ARM_POS);
+    bottomLimit = new DigitalInput(RobotMap.BOT_ARM_POS);
   }
 
   @Override
   public void initDefaultCommand() {
+  }
+
+  /**
+   * Aight lets do the PID stuff Want keepAngle(angle) to move the arm to that
+   * angle and keep it there can try just P cause not that critical but adding D
+   * shouldnt be hard? start with just P and go from there
+   */
+
+  public void keepAngle(ArmPosition position) {
+    double target = position.getAngle();
+    double error = target - getAngle();
+    double output = error * kP;
+    moveArmManual(output);
+  }
+
+  public enum ArmPosition {
+    CARGO(Constants.CARGOSHIP_ANGLE), ROCKET(Constants.ROCKET_ANGLE), PICKUP(Constants.PICKUP_ANGLE),
+    STOW(Constants.STOW_ANGLE);
+
+    private double angle;
+
+    public double getAngle(){
+      return angle;
+    }
+    private ArmPosition(double angle) {
+      this.angle = angle;
+    }
   }
 }

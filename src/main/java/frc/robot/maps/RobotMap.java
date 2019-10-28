@@ -7,12 +7,7 @@ public class RobotMap {
     public static final int REAR_LEFT_MOTOR = 2;
     public static final int FRONT_RIGHT_MOTOR = 3;
     public static final int REAR_RIGHT_MOTOR = 4;
-
-    public static final int LEFT_ENC_CHANNEL_A = 0;
-    public static final int LEFT_ENC_CHANNEL_B = 0;
-    public static final int RIGHT_ENC_CHANNEL_A = 0;
-    public static final int RIGHT_ENC_CHANNEL_B = 0;
-
+    
     // Cargo mech
     public static final int ARM_MASTER_MOTOR = 11;
     public static final int ARM_SLAVE_MOTOR = 12;

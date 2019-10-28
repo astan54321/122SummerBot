@@ -17,6 +17,11 @@ public class Constants {
     public static final boolean TOP_ROLLER_INVERTED = false;
     public static final boolean BOTTOM_ROLLER_INVERTED = false;
 
+    public static final double CARGOSHIP_ANGLE = 1000;
+    public static final double ROCKET_ANGLE = 2000;
+    public static final double STOW_ANGLE = 3000;
+    public static final double PICKUP_ANGLE = 4000;
+
     // hatch mech
     public static final double HATCH_INTAKE_SPEED = 0.7;
     public static final double HATCH_EJECT_SPEED = -0.7;

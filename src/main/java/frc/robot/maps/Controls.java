@@ -24,4 +24,9 @@ public class Controls {
     public static final int HATCH_DEPLOY = 4;
     public static final int HATCH_RETRACT = 3;
 
+    // Obvi change these
+    public static final int ARM_STOW = 1;
+    public static final int ARM_CARGO = 3;
+    public static final int ARM_ROCKET = 4;
+
 }
