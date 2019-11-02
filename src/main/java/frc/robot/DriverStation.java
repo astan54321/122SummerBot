@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.maps.Controls;
 
 public class DriverStation {
@@ -137,7 +138,7 @@ public class DriverStation {
     }
 
     public boolean getRollersActive(){
-        return Math.abs(getRollers()) > 0.05;
+        return getRollers() > 0.3;
     }
 
     public boolean getOpOne() {

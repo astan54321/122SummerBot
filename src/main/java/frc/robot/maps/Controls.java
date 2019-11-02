@@ -26,7 +26,7 @@ public class Controls {
 
     // Obvi change these
     public static final int ARM_STOW = 1;
-    public static final int ARM_CARGO = 3;
-    public static final int ARM_ROCKET = 4;
+    public static final int ARM_CARGO = 4;
+    public static final int ARM_ROCKET = 3;
 
 }

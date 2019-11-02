@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.maps.RobotMap;
 
@@ -17,8 +18,9 @@ public class Arm extends Subsystem {
   private WPI_TalonSRX armMaster, armSlave;
   private DigitalInput cargoCollected, topLimit, bottomLimit;
   private AnalogInput armPosition;
+  private double cruiseVelocity = 0.5;
 
-  private double kP = 0.03;
+  private double kP = 0.99;
 
   public Arm() {
     initMotors();
@@ -30,7 +32,7 @@ public class Arm extends Subsystem {
    */
 
   public void moveArmManual(double speed) {
-    if (speed < 0 && topLimit.get())
+    if (speed < 0 && getTop() || speed > 0 && getBottom())
       speed = 0;
     armMaster.set(speed);
   }
@@ -74,7 +76,7 @@ public class Arm extends Subsystem {
   }
 
   public boolean getBottom() {
-    return bottomLimit.get();
+    return !bottomLimit.get();
   }
 
   public double getAngle() {
@@ -101,6 +103,8 @@ public class Arm extends Subsystem {
     armMaster.setInverted(armSlave.getInverted());
     armSlave.follow(armMaster);
     armMaster.setNeutralMode(NeutralMode.Brake);
+
+    
 
     // rollers
     topRoller.setInverted(Constants.TOP_ROLLER_INVERTED);
@@ -130,19 +134,24 @@ public class Arm extends Subsystem {
   public void keepAngle(ArmPosition position) {
     double target = position.getAngle();
     double error = target - getAngle();
-    double output = error * kP;
-    moveArmManual(output);
+    double output = (error / 700) * kP;
+    if (Math.abs(output) > cruiseVelocity) {
+      output = output > 0 ? cruiseVelocity : -cruiseVelocity;
+    }
+    SmartDashboard.putNumber("Output: ", -output);
+    moveArmManual(-output);
   }
 
   public enum ArmPosition {
     CARGO(Constants.CARGOSHIP_ANGLE), ROCKET(Constants.ROCKET_ANGLE), PICKUP(Constants.PICKUP_ANGLE),
-    STOW(Constants.STOW_ANGLE);
+    STOW(Constants.STOW_ANGLE), HATCH_CAM(Constants.HATCH_CAM_ANGLE);
 
     private double angle;
 
-    public double getAngle(){
+    public double getAngle() {
       return angle;
     }
+
     private ArmPosition(double angle) {
       this.angle = angle;
     }

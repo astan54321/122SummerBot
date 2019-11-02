@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
     initHatchSubsystem();
     initClimbSubsystem();
     initCamera();
-    initCompressor(true);
+    initCompressor(false);
   }
 
   @Override
@@ -54,6 +54,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Arm Down", arm.getBottom());
     SmartDashboard.putBoolean("Arm Up", arm.getTop());
     SmartDashboard.putBoolean("Has Hatch", hatch.hasHatch());
+    SmartDashboard.putBoolean("Rollers", ds.getRollersActive());
   }
 
   @Override
@@ -74,6 +75,7 @@ public class Robot extends TimedRobot {
     cargoControlTest(); // newCargoTest();
     hatchControlTest(); // newHatchTest();
     climbControl();
+    armControlPosition();
   }
 
   @Override
@@ -140,15 +142,16 @@ public class Robot extends TimedRobot {
   }
 
   private void cargoControlTest() {
-    arm.moveArmManual(ds.getManualArmMove() * Constants.ARM_SPEED + Constants.ARM_STALL);
+    // arm.moveArmManual(ds.getManualArmMove() * Constants.ARM_SPEED +
+    // Constants.ARM_STALL);
 
     if (Math.abs(ds.getRollers()) < 0.05) {
       final double holdSpeed = Constants.CARGO_STALL_SPEED;
-      arm.topRollerManual(-holdSpeed);
-      arm.bottomRollerManual(holdSpeed);
+      // arm.topRollerManual(-holdSpeed);
+      // arm.bottomRollerManual(holdSpeed);
     } else {
-      arm.topRollerManual(ds.getRollers());
-      arm.bottomRollerManual(ds.getRollers());
+      // arm.topRollerManual(ds.getRollers());
+      // arm.bottomRollerManual(ds.getRollers());
     }
   }
 
@@ -194,14 +197,23 @@ public class Robot extends TimedRobot {
   // DO NOT USE until POT tested and positon values set in Constants
   public void armControlPosition() {
     ArmPosition actual = ArmPosition.STOW;
-    if (ds.getRollersActive())
-      actual = ArmPosition.PICKUP;
-    else if (ds.getCargoShip())
+    String target = "stow";
+    if (ds.getCargoShip()) {
       actual = ArmPosition.CARGO;
-    else if (ds.getRocket())
+      target = "cargo";
+    } else if (ds.getRocket()) {
       actual = ArmPosition.ROCKET;
+      target = "rocket";
+    } else if (ds.getRollersActive()) {
+      actual = ArmPosition.PICKUP;
+      target = "pickup";
+    } else if (hatch.hasHatch() || ds.getHatchIntake()) {
+      actual = ArmPosition.HATCH_CAM;
+      target = "HatchCam";
+    }
 
     arm.keepAngle(actual);
+    SmartDashboard.putString("Target", target);
   }
   // private void newHatchTest() {
   // if (!arm.hasCargo()) {
